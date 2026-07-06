@@ -3,11 +3,6 @@ name: Playwright CI
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: Branch to run tests against
-        required: true
-        default: main
-        type: string
       testIds:
         description: Optional test grep filter (comma separated or single value)
         required: false
@@ -30,10 +25,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout selected branch
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
