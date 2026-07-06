@@ -2,6 +2,16 @@ import { test as base } from '@playwright/test';
 import { DemoQA } from '../page-model/demoQA';
 import { getUrl, testConfig } from '../config';
 
+export class Authors {
+  static readonly Pavlo = 'Pavlo';
+}
+
+export class Priorities {
+  static readonly High = 'High';
+  static readonly Medium = 'Medium';
+  static readonly Low = 'Low';
+}
+
 /**
  * Playwright fixture extending base test with demoQA page model facade
  */

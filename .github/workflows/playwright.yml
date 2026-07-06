@@ -9,9 +9,9 @@ on:
         default: ''
         type: string
       folders:
-        description: Optional folders to run (comma separated, e.g. tests/qa)
+        description: Optional folders to run (comma separated; defaults to tests/qa)
         required: false
-        default: ''
+        default: 'tests/qa'
         type: string
   schedule:
     - cron: '0 6 * * *'
@@ -20,10 +20,9 @@ permissions:
   contents: read
 
 jobs:
-  playwright:
-    timeout-minutes: 60
+  setup:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,8 +41,46 @@ jobs:
             npm install
           fi
 
+  install-browsers:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+  run-tests:
+    needs: install-browsers
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Run Playwright tests
         id: run-tests
@@ -59,27 +96,47 @@ jobs:
                 TEST_ARGS+=("$trimmed")
               fi
             done
+          else
+            TEST_ARGS+=("tests/qa")
           fi
 
           if [ -n "${{ github.event.inputs.testIds }}" ]; then
             TEST_ARGS+=("-g" "${{ github.event.inputs.testIds }}")
           fi
 
-          if [ ${#TEST_ARGS[@]} -eq 0 ]; then
-            TEST_ARGS+=("tests")
-          fi
-
           echo "Running Playwright with: ${TEST_ARGS[*]}"
           npx playwright test "${TEST_ARGS[@]}"
 
-      - name: Publish Playwright report
+      - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-results
           path: |
             playwright-report/
             test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  report:
+    needs: run-tests
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download Playwright artifacts
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-results
+          path: playwright-artifacts
+
+      - name: Publish consolidated report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-final
+          path: playwright-artifacts/
           if-no-files-found: ignore
           retention-days: 14
 
@@ -87,4 +144,4 @@ jobs:
         if: always()
         run: |
           echo "Playwright run completed."
-          echo "Check the uploaded report and test-results artifacts for detailed output."
+          echo "Artifacts are available in the workflow run summary."
