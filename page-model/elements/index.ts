@@ -1,0 +1,10 @@
+export { TextBoxPage } from './text-box-page';
+export { TextBoxPageVerify } from './text-box-page-verify';
+export { CheckBoxPage } from './check-box-page';
+export { CheckBoxPageVerify } from './check-box-page-verify';
+export { RadioButtonPage } from './radio-button-page';
+export { RadioButtonPageVerify } from './radio-button-page-verify';
+export { ButtonsPage } from './buttons-page';
+export { ButtonsPageVerify } from './buttons-page-verify';
+export { LinksPage } from './links-page';
+export { LinksPageVerify } from './links-page-verify';
