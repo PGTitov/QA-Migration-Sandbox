@@ -1,0 +1,26 @@
+{
+  "name": "qa-migration-sandbox",
+  "version": "1.0.0",
+  "description": "QA Migration Sandbox",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.0"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PGTitov/QA-Migration-Sandbox.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PGTitov/QA-Migration-Sandbox/issues"
+  },
+  "homepage": "https://github.com/PGTitov/QA-Migration-Sandbox#readme"
+}
