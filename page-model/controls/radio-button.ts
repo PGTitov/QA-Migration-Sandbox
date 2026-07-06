@@ -29,7 +29,7 @@ export class RadioButton extends CommonControl {
     return this.radioButton.isChecked();
   }
 
-  override toString(): string {
+  toString(): string {
     return `${this.name} radio button`;
   }
 }

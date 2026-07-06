@@ -18,7 +18,7 @@ export class PracticeFormPageVerify {
     await expect(this.page.locators.successMessage).toContainText(text);
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Practice Form Page';
   }
 }

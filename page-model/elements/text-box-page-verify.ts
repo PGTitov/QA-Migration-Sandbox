@@ -20,7 +20,7 @@ export class TextBoxPageVerify {
     );
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Text Box Page';
   }
 }

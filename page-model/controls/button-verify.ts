@@ -16,7 +16,7 @@ export class ButtonVerify extends CommonControlVerify {
     await expect(control).toContainText(expectedText);
   }
 
-  override toString(): string {
+  toString(): string {
     return this.getName();
   }
 }

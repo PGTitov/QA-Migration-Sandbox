@@ -33,7 +33,7 @@ export class Header {
     await this.logo.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Header';
   }
 }

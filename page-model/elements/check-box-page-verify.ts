@@ -19,7 +19,7 @@ export class CheckBoxPageVerify {
     await expect(this.page.locators.treeView).toBeVisible();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'CheckBox Page';
   }
 }

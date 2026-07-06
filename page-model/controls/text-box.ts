@@ -34,7 +34,7 @@ export class TextBox extends CommonControl {
     return this.textBox.inputValue();
   }
 
-  override toString(): string {
+  toString(): string {
     return `${this.name} text box`;
   }
 }

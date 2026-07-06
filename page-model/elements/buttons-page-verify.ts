@@ -18,7 +18,7 @@ export class ButtonsPageVerify {
     await expect(this.page.locators.messages).toContainText(text);
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Buttons Page';
   }
 }

@@ -67,7 +67,7 @@ export class ButtonsPage {
     await this.clickMeBtn.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Buttons Page';
   }
 }

@@ -18,7 +18,7 @@ export class SliderPageVerify {
     await expect(this.page.locators.slider).toBeVisible();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Slider Page';
   }
 }

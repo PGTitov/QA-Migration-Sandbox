@@ -25,13 +25,13 @@ export class TextBoxPage {
 
   constructor(protected readonly page: Page) {
     this.locators = {
-      root: this.page.locator('app-text-box'),
-      fullNameInput: this.page.locator('#fullName'),
+      root: this.page.locator('form#userForm'),
+      fullNameInput: this.page.locator('#userName'),
       emailInput: this.page.locator('#userEmail'),
       currentAddressInput: this.page.locator('#currentAddress'),
       permanentAddressInput: this.page.locator('#permanentAddress'),
-      submitButton: this.page.locator('button:text("Submit")'),
-      outputContainer: this.page.locator('.border'),
+      submitButton: this.page.locator('#submit'),
+      outputContainer: this.page.locator('#output'),
     };
     this.verify = new TextBoxPageVerify(this);
   }
@@ -83,7 +83,7 @@ export class TextBoxPage {
     await this.locators.submitButton.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Text Box Page';
   }
 }

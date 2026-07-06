@@ -65,7 +65,7 @@ export class LeftSidebar {
     }
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Left Sidebar';
   }
 }

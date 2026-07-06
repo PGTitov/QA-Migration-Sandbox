@@ -89,7 +89,7 @@ export class DemoQA {
     return (this._sliderPage ??= new SliderPage(this.page));
   }
 
-  override toString(): string {
+  toString(): string {
     return 'DemoQA';
   }
 }

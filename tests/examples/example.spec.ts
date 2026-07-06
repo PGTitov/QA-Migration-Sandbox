@@ -1,5 +1,5 @@
-import { test, expect } from './fixtures';
-import { getUrl, testConfig } from '../config';
+import { test, expect } from '../fixtures';
+import { getUrl, testConfig } from '../../config';
 
 /**
  * Example tests demonstrating DemoQA page model usage

@@ -20,7 +20,7 @@ export class CheckBoxVerify extends CommonControlVerify {
     }
   }
 
-  override toString(): string {
+  toString(): string {
     return this.getName();
   }
 }

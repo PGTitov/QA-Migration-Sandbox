@@ -13,7 +13,7 @@ export class RadioButtonPageVerify {
     await expect(this.page.locators.resultText).toContainText(expectedText);
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Radio Button Page';
   }
 }

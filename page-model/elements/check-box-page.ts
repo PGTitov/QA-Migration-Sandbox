@@ -54,7 +54,7 @@ export class CheckBoxPage {
     return items.map((item) => item.trim());
   }
 
-  override toString(): string {
+  toString(): string {
     return 'CheckBox Page';
   }
 }

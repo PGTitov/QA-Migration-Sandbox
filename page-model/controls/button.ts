@@ -29,7 +29,7 @@ export class Button extends CommonControl {
     return this.button.textContent() as Promise<string>;
   }
 
-  override toString(): string {
+  toString(): string {
     return `${this.name} button`;
   }
 }

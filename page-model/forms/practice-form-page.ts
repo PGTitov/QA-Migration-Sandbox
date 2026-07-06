@@ -115,7 +115,7 @@ export class PracticeFormPage {
     await this.locators.submitButton.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Practice Form Page';
   }
 }

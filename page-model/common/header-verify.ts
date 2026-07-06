@@ -13,7 +13,7 @@ export class HeaderVerify {
     await expect(this.header.locators.logo).toBeVisible();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Header';
   }
 }

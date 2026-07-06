@@ -22,7 +22,7 @@ export class LeftSidebarVerify {
     await expect(collapseBtn).not.toHaveClass(/collapse/);
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Left Sidebar';
   }
 }

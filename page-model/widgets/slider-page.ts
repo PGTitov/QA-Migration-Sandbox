@@ -40,7 +40,7 @@ export class SliderPage {
     await sliderElement.dragTo(sliderElement, { targetPosition: { x: xOffset, y: 0 } });
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Slider Page';
   }
 }

@@ -39,7 +39,7 @@ export class RadioButtonPage {
     return selectedRadio;
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Radio Button Page';
   }
 }

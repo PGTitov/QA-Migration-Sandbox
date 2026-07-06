@@ -43,7 +43,7 @@ export class CheckBox extends CommonControl {
     return this.checkBox.isChecked();
   }
 
-  override toString(): string {
+  toString(): string {
     return `${this.name} checkbox`;
   }
 }

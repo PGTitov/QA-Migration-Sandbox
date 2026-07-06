@@ -22,7 +22,7 @@ export class TextBoxVerify extends CommonControlVerify {
     await expect(control).toHaveAttribute('placeholder', expectedPlaceholder);
   }
 
-  override toString(): string {
+  toString(): string {
     return this.getName();
   }
 }

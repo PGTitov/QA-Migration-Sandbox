@@ -43,7 +43,7 @@ export class DatePickerPage {
     await dateButton.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Date Picker Page';
   }
 }

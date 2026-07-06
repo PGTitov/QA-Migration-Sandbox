@@ -18,7 +18,7 @@ export class DatePickerPageVerify {
     await expect(this.page.locators.datePickerContainer).toBeVisible();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Date Picker Page';
   }
 }

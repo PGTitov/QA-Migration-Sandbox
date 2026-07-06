@@ -18,7 +18,7 @@ export class LinksPageVerify {
     await expect(this.page.locators.responseBox).toContainText(statusCode);
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Links Page';
   }
 }

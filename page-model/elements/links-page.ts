@@ -54,7 +54,7 @@ export class LinksPage {
     await link.click();
   }
 
-  override toString(): string {
+  toString(): string {
     return 'Links Page';
   }
 }

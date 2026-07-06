@@ -7,12 +7,18 @@ import { test } from '@playwright/test';
 export function step(description: string) {
   return function (
     target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
+    propertyKey: string | symbol,
+    descriptor?: PropertyDescriptor
   ) {
-    const originalMethod = descriptor.value;
+    const originalDescriptor = descriptor ?? Object.getOwnPropertyDescriptor(target, propertyKey);
 
-    descriptor.value = async function (...args: any[]) {
+    if (!originalDescriptor || typeof originalDescriptor.value !== 'function') {
+      return descriptor;
+    }
+
+    const originalMethod = originalDescriptor.value;
+
+    originalDescriptor.value = async function (...args: any[]) {
       let stepDescription = description;
 
       // Replace {{args[n]}} with actual arguments
@@ -30,6 +36,6 @@ export function step(description: string) {
       });
     };
 
-    return descriptor;
+    return originalDescriptor;
   };
 }
