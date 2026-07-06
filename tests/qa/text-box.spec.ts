@@ -1,7 +1,16 @@
-import { test, expect } from '../fixtures';
+import { test, expect, Authors, Priorities } from '../fixtures';
 
 test.describe('DemoQA Text Box page', () => {
-  test('fills the form and verifies the submitted values', async ({ demoQA, page }) => {
+  test(
+    '[TEST-1] Verify the Textbox',
+    {
+      annotation: [
+        { type: 'author', description: Authors.Pavlo },
+        { type: 'id', description: 'TEST-1' },
+        { type: 'priority', description: Priorities.Medium },
+      ],
+    },
+    async ({ demoQA, page }) => {
     const fullName = 'Alice Johnson';
     const email = 'alice@example.com';
     const currentAddress = '123 Main Street';
@@ -22,5 +31,6 @@ test.describe('DemoQA Text Box page', () => {
     await demoQA.textBoxPage.verify.outputContains(email);
     await demoQA.textBoxPage.verify.outputContains(currentAddress);
     await demoQA.textBoxPage.verify.outputContains(permanentAddress);
-  });
+    }
+  );
 });
