@@ -83,6 +83,11 @@ export class TextBoxPage {
     await this.locators.submitButton.click();
   }
 
+  @step('Wait for text box form to be visible')
+  async waitForForm(): Promise<void> {
+    await this.locators.root.waitFor({ state: 'visible' });
+  }
+
   toString(): string {
     return 'Text Box Page';
   }

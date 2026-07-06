@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Text Box page', () => {
   test('fills the form and verifies the submitted values', async ({ demoQA, page }) => {
@@ -8,11 +7,9 @@ test.describe('DemoQA Text Box page', () => {
     const currentAddress = '123 Main Street';
     const permanentAddress = '456 Oak Avenue';
 
-    await page.goto(getUrl(testConfig.pages.elements), { waitUntil: 'domcontentloaded' });
-
     await demoQA.sidebar.expandSection('Elements');
     await demoQA.sidebar.navigateToPage('text-box');
-    await page.locator('#userForm').waitFor({ state: 'visible' });
+    await demoQA.textBoxPage.waitForForm();
 
     await demoQA.textBoxPage.fullNameField.typeText(fullName);
     await demoQA.textBoxPage.emailField.typeText(email);
@@ -21,9 +18,9 @@ test.describe('DemoQA Text Box page', () => {
 
     await demoQA.textBoxPage.submit();
 
-    await expect(page.locator('#output')).toContainText(fullName);
-    await expect(page.locator('#output')).toContainText(email);
-    await expect(page.locator('#output')).toContainText(currentAddress);
-    await expect(page.locator('#output')).toContainText(permanentAddress);
+    await demoQA.textBoxPage.verify.outputContains(fullName);
+    await demoQA.textBoxPage.verify.outputContains(email);
+    await demoQA.textBoxPage.verify.outputContains(currentAddress);
+    await demoQA.textBoxPage.verify.outputContains(permanentAddress);
   });
 });

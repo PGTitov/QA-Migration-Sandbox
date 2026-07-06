@@ -20,6 +20,11 @@ export class TextBoxPageVerify {
     );
   }
 
+  @step('Verify output contains "{{args[0]}}"')
+  async outputContains(text: string): Promise<void> {
+    await expect(this.page.locators.outputContainer).toContainText(text);
+  }
+
   toString(): string {
     return 'Text Box Page';
   }
