@@ -1,4 +1,5 @@
 import { test, expect, Authors, Priorities } from '../fixtures';
+import { faker } from '@faker-js/faker';
 
 test.describe('DemoQA Text Box page', () => {
   test(
@@ -11,26 +12,40 @@ test.describe('DemoQA Text Box page', () => {
       ],
     },
     async ({ demoQA, page }) => {
-    const fullName = 'Alice Johnson';
-    const email = 'alice@example.com';
-    const currentAddress = '123 Main Street';
-    const permanentAddress = '456 Oak Avenue';
+      // #region Arrange
+      const fullName = faker.person.fullName();
+      const email = faker.internet.email();
+      const currentAddress = faker.location.streetAddress();
+      const permanentAddress = faker.location.streetAddress();
 
-    await demoQA.sidebar.expandSection('Elements');
-    await demoQA.sidebar.navigateToPage('text-box');
-    await demoQA.textBoxPage.waitForForm();
+      await test.step('1. Navigate to the Text Box page', async () => {
+        await demoQA.sidebar.expandSection('Elements');
+        await demoQA.sidebar.navigateToPage('text-box');
+        await demoQA.textBoxPage.waitForForm();
+      });
+      // #endregion
 
-    await demoQA.textBoxPage.fullNameField.typeText(fullName);
-    await demoQA.textBoxPage.emailField.typeText(email);
-    await demoQA.textBoxPage.currentAddressField.typeText(currentAddress);
-    await demoQA.textBoxPage.permanentAddressField.typeText(permanentAddress);
+      // #region Act
+      await test.step('2. Fill in the Full Name, Email, Current Address, and Permanent Address fields', async () => {
+        await demoQA.textBoxPage.fullNameField.typeText(fullName);
+        await demoQA.textBoxPage.emailField.typeText(email);
+        await demoQA.textBoxPage.currentAddressField.typeText(currentAddress);
+        await demoQA.textBoxPage.permanentAddressField.typeText(permanentAddress);
+      });
 
-    await demoQA.textBoxPage.submit();
+      await test.step('3. Submit the form', async () => {
+        await demoQA.textBoxPage.submit();
+      });
+      // #endregion
 
-    await demoQA.textBoxPage.verify.outputContains(fullName);
-    await demoQA.textBoxPage.verify.outputContains(email);
-    await demoQA.textBoxPage.verify.outputContains(currentAddress);
-    await demoQA.textBoxPage.verify.outputContains(permanentAddress);
+      // #region Assert
+      await test.step('4. Verify that the output contains the entered values', async () => {
+        await demoQA.textBoxPage.verify.outputContains(fullName);
+        await demoQA.textBoxPage.verify.outputContains(email);
+        await demoQA.textBoxPage.verify.outputContains(currentAddress);
+        await demoQA.textBoxPage.verify.outputContains(permanentAddress);
+      });
+      // #endregion
     }
   );
 });
