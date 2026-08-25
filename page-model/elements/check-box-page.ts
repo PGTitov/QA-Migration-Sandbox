@@ -21,8 +21,8 @@ export class CheckBoxPage {
       root: this.page.locator('app-checkbox'),
       expandAllButton: this.page.locator('button:text("Expand All")'),
       collapseAllButton: this.page.locator('button:text("Collapse All")'),
-      treeView: this.page.locator('.tree-view'),
-      resultsSection: this.page.locator('.mt-4'),
+      treeView: this.page.getByRole('tree'),
+      resultsSection: this.page.locator('#result'),
     };
     this.verify = new CheckBoxPageVerify(this);
   }
@@ -39,11 +39,12 @@ export class CheckBoxPage {
 
   @step('Check item "{{args[0]}}"')
   async checkItem(itemLabel: string): Promise<void> {
-    const itemCheckbox = this.page.locator(
-      `.tree-view input[type="checkbox"]:near(:text("${itemLabel}"))`
-    );
-    const checkbox = new CheckBox(itemCheckbox, itemLabel);
-    await checkbox.check();
+    await this.getItemCheckbox(itemLabel).check();
+  }
+
+  @step('Uncheck item "{{args[0]}}"')
+  async uncheckItem(itemLabel: string): Promise<void> {
+    await this.getItemCheckbox(itemLabel).uncheck();
   }
 
   @step('Get selected items')
@@ -52,6 +53,13 @@ export class CheckBoxPage {
       .locator('.mt-4 span.text-success')
       .allTextContents();
     return items.map((item) => item.trim());
+  }
+
+  private getItemCheckbox(itemLabel: string): CheckBox {
+    const itemCheckbox = this.page
+      .getByRole('treeitem', { name: new RegExp(itemLabel, 'i') })
+      .getByRole('checkbox');
+    return new CheckBox(itemCheckbox, itemLabel);
   }
 
   toString(): string {

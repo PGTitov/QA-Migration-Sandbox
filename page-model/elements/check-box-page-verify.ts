@@ -14,6 +14,12 @@ export class CheckBoxPageVerify {
     await expect(resultText).toContainText(itemLabel);
   }
 
+  @step('Verify item "{{args[0]}}" is not selected')
+  async itemIsNotSelected(itemLabel: string): Promise<void> {
+    const resultText = this.page.locators.resultsSection;
+    await expect(resultText).toHaveCount(0);
+  }
+
   @step('Verify tree view is visible')
   async treeViewIsVisible(): Promise<void> {
     await expect(this.page.locators.treeView).toBeVisible();
