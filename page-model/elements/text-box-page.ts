@@ -83,6 +83,11 @@ export class TextBoxPage {
     await this.locators.submitButton.click();
   }
 
+  @step('Press Tab')
+  async pressTab(): Promise<void> {
+    await this.page.keyboard.press('Tab');
+  }
+
   @step('Wait for text box form to be visible')
   async waitForForm(): Promise<void> {
     await this.locators.root.waitFor({ state: 'visible' });
