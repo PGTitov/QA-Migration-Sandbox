@@ -15,7 +15,7 @@ export class LeftSidebarVerify {
 
   @step('Verify "{{args[0]}}" section is expanded')
   async sectionIsExpanded(sectionName: string): Promise<void> {
-    const section = this.sidebar.locators.page.locator(
+    const section = this.sidebar.locators.root.locator(
       `.element-group:has(.header-text:has-text("${sectionName}"))`
     );
     const collapseBtn = section.locator('.element-list');

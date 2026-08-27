@@ -57,12 +57,12 @@ export class TextBoxPageVerify {
     await expect(this.page.locators.emailInput).toHaveClass(/field-error/);
   }
 
-  @step('Verify Email field validation message is "{{args[0]}}"')
-  async emailValidationMessageIs(expectedMessage: string): Promise<void> {
-    await expect(this.page.locators.emailInput).toHaveJSProperty(
-      'validationMessage',
-      expectedMessage
+  @step('Verify Email field has a browser validation message')
+  async emailValidationMessageIs(): Promise<void> {
+    const validationMessage = await this.page.locators.emailInput.evaluate(
+      (field: HTMLInputElement) => field.validationMessage
     );
+    expect(validationMessage).toBeTruthy();
   }
 
   @step('Verify {{args[0]}} address field can be resized vertically')

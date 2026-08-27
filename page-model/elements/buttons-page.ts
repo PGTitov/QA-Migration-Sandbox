@@ -16,9 +16,9 @@ export class ButtonsPage {
     messages: Locator;
   };
 
-  private doubleClickBtn?: Button;
-  private rightClickBtn?: Button;
-  private clickMeBtn?: Button;
+  private _doubleClickBtn?: Button;
+  private _rightClickBtn?: Button;
+  private _clickMeBtn?: Button;
 
   constructor(protected readonly page: Page) {
     this.locators = {
@@ -32,21 +32,21 @@ export class ButtonsPage {
   }
 
   get doubleClickBtn(): Button {
-    return (this.doubleClickBtn ??= new Button(
+    return (this._doubleClickBtn ??= new Button(
       this.locators.doubleClickButton,
       'Double Click'
     ));
   }
 
   get rightClickBtn(): Button {
-    return (this.rightClickBtn ??= new Button(
+    return (this._rightClickBtn ??= new Button(
       this.locators.rightClickButton,
       'Right Click'
     ));
   }
 
   get clickMeBtn(): Button {
-    return (this.clickMeBtn ??= new Button(
+    return (this._clickMeBtn ??= new Button(
       this.locators.clickMeButton,
       'Click Me'
     ));

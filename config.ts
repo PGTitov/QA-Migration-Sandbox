@@ -3,7 +3,7 @@
  */
 
 export const testConfig = {
-  baseUrl: 'https://demoqa.com',
+  baseUrl: process.env.BASE_URL ?? 'https://demoqa.com',
   
   pages: {
     elements: '/elements',

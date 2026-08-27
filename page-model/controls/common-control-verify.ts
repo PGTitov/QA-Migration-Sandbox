@@ -21,7 +21,11 @@ export abstract class CommonControlVerify {
   @step('Verify {{this}} is disabled')
   async disabled(isDisabled: boolean = true): Promise<void> {
     const control = await this.control;
-    await expect(control).toHaveAttribute('disabled', isDisabled ? '' : null);
+    if (isDisabled) {
+      await expect(control).toBeDisabled();
+    } else {
+      await expect(control).not.toBeDisabled();
+    }
   }
 
   @step('Verify {{this}} is visible')
