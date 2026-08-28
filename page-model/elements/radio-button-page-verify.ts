@@ -13,6 +13,11 @@ export class RadioButtonPageVerify {
     await expect(this.page.locators.resultText).toContainText(expectedText);
   }
 
+  @step('Verify radio button "{{args[0]}}" is disabled')
+  async optionIsDisabled(optionLabel: string, isDisabled: boolean = true): Promise<void> {
+    await this.page.getOption(optionLabel).verify.disabled(isDisabled);
+  }
+
   toString(): string {
     return 'Radio Button Page';
   }

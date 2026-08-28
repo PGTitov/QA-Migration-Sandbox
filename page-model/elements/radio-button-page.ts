@@ -23,12 +23,16 @@ export class RadioButtonPage {
     this.verify = new RadioButtonPageVerify(this);
   }
 
-  @step('Select radio button "{{args[0]}}"')
-  async selectOption(optionLabel: string): Promise<void> {
+  @step('Get radio button "{{args[0]}}"')
+  getOption(optionLabel: string): RadioButton {
     const label = this.page.locator(`.form-check-label:text("${optionLabel}")`);
     const radioInput = label.locator('xpath=preceding-sibling::input[@type="radio"]');
-    const button = new RadioButton(radioInput, optionLabel);
-    await button.select();
+    return new RadioButton(radioInput, optionLabel);
+  }
+
+  @step('Select radio button "{{args[0]}}"')
+  async selectOption(optionLabel: string): Promise<void> {
+    await this.getOption(optionLabel).select();
   }
 
   @step('Get selected radio button')

@@ -26,7 +26,9 @@ export class ButtonsPage {
       doubleClickButton: this.page.locator('#doubleClickBtn'),
       rightClickButton: this.page.locator('#rightClickBtn'),
       clickMeButton: this.page.locator('button:text("Click Me")').last(),
-      messages: this.page.locator('.mt-3'),
+      messages: this.page.locator(
+        '#doubleClickMessage, #rightClickMessage, #dynamicClickMessage'
+      ),
     };
     this.verify = new ButtonsPageVerify(this);
   }

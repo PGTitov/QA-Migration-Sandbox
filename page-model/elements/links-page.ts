@@ -24,7 +24,7 @@ export class LinksPage {
   constructor(protected readonly page: Page) {
     this.locators = {
       root: this.page.locator('app-links'),
-      homeLink: this.page.locator('a:text("Home")').first(),
+      homeLink: this.page.locator('#simpleLink'),
       dynamicLink: this.page.locator('#dynamicLink'),
       createdLink: this.page.locator('a[id="created"]'),
       noContentLink: this.page.locator('a[id="no-content"]'),
@@ -32,8 +32,8 @@ export class LinksPage {
       badRequestLink: this.page.locator('a[id="bad-request"]'),
       unauthorizedLink: this.page.locator('a[id="unauthorized"]'),
       forbiddenLink: this.page.locator('a[id="forbidden"]'),
-      notFoundLink: this.page.locator('a[id="not-found"]'),
-      responseBox: this.page.locator('.mt-3'),
+      notFoundLink: this.page.locator('a[id="invalid-url"]'),
+      responseBox: this.page.locator('#linkResponse'),
     };
     this.verify = new LinksPageVerify(this);
   }
@@ -46,6 +46,26 @@ export class LinksPage {
   @step('Click dynamic link')
   async clickDynamicLink(): Promise<void> {
     await this.locators.dynamicLink.click();
+  }
+
+  @step('Click home link and capture the new tab')
+  async openHomeLinkInNewTab(): Promise<Page> {
+    const [newPage] = await Promise.all([
+      this.page.context().waitForEvent('page'),
+      this.clickHomeLink(),
+    ]);
+    await newPage.waitForLoadState();
+    return newPage;
+  }
+
+  @step('Click dynamic link and capture the new tab')
+  async openDynamicLinkInNewTab(): Promise<Page> {
+    const [newPage] = await Promise.all([
+      this.page.context().waitForEvent('page'),
+      this.clickDynamicLink(),
+    ]);
+    await newPage.waitForLoadState();
+    return newPage;
   }
 
   @step('Click "{{args[0]}}" link')

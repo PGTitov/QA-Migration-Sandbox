@@ -10,8 +10,10 @@ export const testConfig = {
     textBox: '/text-box',
     checkbox: '/checkbox',
     radioButton: '/radio-button',
+    webTables: '/webtables',
     buttons: '/buttons',
     links: '/links',
+    brokenLinksImages: '/broken',
     uploadDownload: '/upload-download',
     dynamicProperties: '/dynamic-properties',
     
