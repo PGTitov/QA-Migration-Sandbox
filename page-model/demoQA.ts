@@ -4,8 +4,12 @@ import { LeftSidebar } from './common/left-sidebar';
 import { TextBoxPage } from './elements/text-box-page';
 import { CheckBoxPage } from './elements/check-box-page';
 import { RadioButtonPage } from './elements/radio-button-page';
+import { WebTablesPage } from './elements/web-tables-page';
 import { ButtonsPage } from './elements/buttons-page';
 import { LinksPage } from './elements/links-page';
+import { BrokenLinksImagesPage } from './elements/broken-links-images-page';
+import { UploadDownloadPage } from './elements/upload-download-page';
+import { DynamicPropertiesPage } from './elements/dynamic-properties-page';
 import { PracticeFormPage } from './forms/practice-form-page';
 import { DatePickerPage } from './widgets/date-picker-page';
 import { SliderPage } from './widgets/slider-page';
@@ -22,8 +26,12 @@ export class DemoQA {
   private _textBoxPage?: TextBoxPage;
   private _checkBoxPage?: CheckBoxPage;
   private _radioButtonPage?: RadioButtonPage;
+  private _webTablesPage?: WebTablesPage;
   private _buttonsPage?: ButtonsPage;
   private _linksPage?: LinksPage;
+  private _brokenLinksImagesPage?: BrokenLinksImagesPage;
+  private _uploadDownloadPage?: UploadDownloadPage;
+  private _dynamicPropertiesPage?: DynamicPropertiesPage;
 
   // Forms pages
   private _practiceFormPage?: PracticeFormPage;
@@ -63,12 +71,28 @@ export class DemoQA {
     return (this._radioButtonPage ??= new RadioButtonPage(this.page));
   }
 
+  get webTablesPage(): WebTablesPage {
+    return (this._webTablesPage ??= new WebTablesPage(this.page));
+  }
+
   get buttonsPage(): ButtonsPage {
     return (this._buttonsPage ??= new ButtonsPage(this.page));
   }
 
   get linksPage(): LinksPage {
     return (this._linksPage ??= new LinksPage(this.page));
+  }
+
+  get brokenLinksImagesPage(): BrokenLinksImagesPage {
+    return (this._brokenLinksImagesPage ??= new BrokenLinksImagesPage(this.page));
+  }
+
+  get uploadDownloadPage(): UploadDownloadPage {
+    return (this._uploadDownloadPage ??= new UploadDownloadPage(this.page));
+  }
+
+  get dynamicPropertiesPage(): DynamicPropertiesPage {
+    return (this._dynamicPropertiesPage ??= new DynamicPropertiesPage(this.page));
   }
 
   /**

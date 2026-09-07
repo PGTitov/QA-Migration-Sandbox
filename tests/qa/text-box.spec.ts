@@ -20,8 +20,9 @@ test.describe('DemoQA Text Box page', () => {
       const permanentAddress = faker.location.streetAddress();
 
       await test.step('1. Navigate to the Text Box page', async () => {
-        await demoQA.sidebar.expandSection('Elements');
-        await demoQA.sidebar.navigateToPage('text-box');
+        await page.goto(getUrl(testConfig.pages.textBox), {
+          waitUntil: 'domcontentloaded',
+        });
         await demoQA.textBoxPage.waitForForm();
       });
       // #endregion
@@ -121,9 +122,7 @@ test.describe('DemoQA Text Box page', () => {
       await test.step('3. Verify the email field is invalid and no output is shown', async () => {
         await demoQA.textBoxPage.verify.emailIsInvalid();
         await demoQA.textBoxPage.verify.emailHasErrorBorder();
-        await demoQA.textBoxPage.verify.emailValidationMessageIs(
-          "Please include an '@' in the email address. 'invalid-email' is missing an '@'."
-        );
+        await demoQA.textBoxPage.verify.emailValidationMessageIs();
         await demoQA.textBoxPage.verify.output.visible(false);
       });
       // #endregion

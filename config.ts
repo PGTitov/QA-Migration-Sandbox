@@ -3,15 +3,17 @@
  */
 
 export const testConfig = {
-  baseUrl: 'https://demoqa.com',
+  baseUrl: process.env.BASE_URL ?? 'https://demoqa.com',
   
   pages: {
     elements: '/elements',
     textBox: '/text-box',
     checkbox: '/checkbox',
     radioButton: '/radio-button',
+    webTables: '/webtables',
     buttons: '/buttons',
     links: '/links',
+    brokenLinksImages: '/broken',
     uploadDownload: '/upload-download',
     dynamicProperties: '/dynamic-properties',
     

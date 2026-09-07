@@ -18,6 +18,11 @@ export class ButtonsPageVerify {
     await expect(this.page.locators.messages).toContainText(text);
   }
 
+  @step('Verify no button action message is shown')
+  async noMessageShown(): Promise<void> {
+    await expect(this.page.locators.messages).toHaveCount(0);
+  }
+
   toString(): string {
     return 'Buttons Page';
   }
