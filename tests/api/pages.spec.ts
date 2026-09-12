@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { getUrl, testConfig } from '../../config';
+import { testBook } from '../../test-data/book';
 
 const pageRoutes = [
   ['Elements', testConfig.pages.elements],
@@ -63,13 +64,13 @@ test.describe('DemoQA Book Store API tests', () => {
 
   test('returns a book by ISBN', async ({ request }) => {
     const response = await request.get(
-      getUrl('/BookStore/v1/Book?ISBN=9781449325862'),
+      getUrl(`/BookStore/v1/Book?ISBN=${testBook.isbn}`),
     );
 
     expect(response.status()).toBe(200);
 
     const body = await response.json();
-    expect(body.isbn).toBe('9781449325862');
+    expect(body.isbn).toBe(testBook.isbn);
   });
 
   test('returns bad request for an invalid ISBN', async ({ request }) => {

@@ -5,8 +5,7 @@ import {
   generateToken,
   registerAccount,
 } from './general-utils';
-
-const isbn = '9781449325862';
+import { testBook } from '../../test-data/book';
 
 test.describe('DemoQA Book Store API', () => {
   test('returns the available books with the documented fields', async ({ request }) => {
@@ -30,13 +29,13 @@ test.describe('DemoQA Book Store API', () => {
 
   test('returns a book by ISBN', async ({ request }) => {
     const bookResponse = await request.get(
-      getUrl(`/BookStore/v1/Book?ISBN=${isbn}`),
+      getUrl(`/BookStore/v1/Book?ISBN=${testBook.isbn}`),
     );
 
     expect(bookResponse.status()).toBe(200);
     expect(await bookResponse.json()).toEqual(
       expect.objectContaining({
-        isbn,
+        isbn: testBook.isbn,
         title: expect.any(String),
         subTitle: expect.any(String),
         author: expect.any(String),
@@ -96,7 +95,7 @@ test.describe('DemoQA Book Store API', () => {
         headers,
         data: {
           userId: account.userId,
-          collectionOfIsbns: [{ isbn }],
+          collectionOfIsbns: [{ isbn: testBook.isbn }],
         },
       });
       expect(addBookResponse.status()).toBe(201);
@@ -106,12 +105,14 @@ test.describe('DemoQA Book Store API', () => {
         { headers },
       );
       expect((await updatedUserResponse.json()).books).toEqual(
-        expect.arrayContaining([expect.objectContaining({ isbn })]),
+        expect.arrayContaining([
+          expect.objectContaining({ isbn: testBook.isbn }),
+        ]),
       );
 
       const removeBookResponse = await request.delete(getUrl('/BookStore/v1/Book'), {
         headers,
-        data: { isbn, userId: account.userId },
+        data: { isbn: testBook.isbn, userId: account.userId },
       });
       expect(removeBookResponse.status()).toBe(204);
     } finally {
