@@ -28,14 +28,16 @@ test.describe('DemoQA Book Store API', () => {
     );
   });
 
-  test('returns a book by ISBN and rejects an unknown ISBN', async ({ request }) => {
+  test('returns a book by ISBN', async ({ request }) => {
     const bookResponse = await request.get(
       getUrl(`/BookStore/v1/Book?ISBN=${isbn}`),
     );
 
     expect(bookResponse.status()).toBe(200);
     expect((await bookResponse.json()).isbn).toBe(isbn);
+  });
 
+  test('rejects an unknown ISBN', async ({ request }) => {
     const invalidResponse = await request.get(
       getUrl('/BookStore/v1/Book?ISBN=invalid-isbn'),
     );
