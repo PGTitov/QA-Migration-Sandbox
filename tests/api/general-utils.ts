@@ -9,9 +9,13 @@ export type Account = {
   password: string;
 };
 
+export function generateRandomUsername(): string {
+  return `api-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export async function registerAccount(request: APIRequestContext): Promise<Account> {
   const account = {
-    userName: `api-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    userName: generateRandomUsername(),
     password,
   };
   const response = await request.post(getUrl('/Account/v1/User'), {
