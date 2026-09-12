@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { getUrl, testConfig } from '../../config';
-import { testBook } from '../../test-data/book';
+import { testBooks } from '../../test-data/books';
+import {
+  deleteAccount,
+  generateToken,
+  registerAccount,
+} from './general-utils';
+
+const testBook = testBooks[0];
 
 const pageRoutes = [
   ['Elements', testConfig.pages.elements],
@@ -60,6 +67,26 @@ test.describe('DemoQA Book Store API tests', () => {
     const body = await response.json();
     expect(body.books).toBeInstanceOf(Array);
     expect(body.books.length).toBeGreaterThan(0);
+    expect(body.books).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ isbn: testBook.isbn }),
+      ]),
+    );
+    expect(body.books).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          isbn: expect.any(String),
+          title: expect.any(String),
+          subTitle: expect.any(String),
+          author: expect.any(String),
+          publish_date: expect.any(String),
+          publisher: expect.any(String),
+          pages: expect.any(Number),
+          description: expect.any(String),
+          website: expect.any(String),
+        }),
+      ]),
+    );
   });
 
   test('returns a book by ISBN', async ({ request }) => {
@@ -71,6 +98,51 @@ test.describe('DemoQA Book Store API tests', () => {
 
     const body = await response.json();
     expect(body.isbn).toBe(testBook.isbn);
+  });
+
+  test('adds testBooks[0] and returns its exact data', async ({ request }) => {
+    const postedBook = testBooks[0];
+    const account = await registerAccount(request);
+    const token = await generateToken(request, account);
+    const headers = { Authorization: `Bearer ${token}` };
+
+    try {
+      const addBookResponse = await request.post(getUrl('/BookStore/v1/Books'), {
+        headers,
+        data: {
+          userId: account.userId,
+          collectionOfIsbns: [{ isbn: postedBook.isbn }],
+        },
+      });
+
+      expect(addBookResponse.status()).toBe(201);
+
+      const userResponse = await request.get(
+        getUrl(`/Account/v1/User/${account.userId}`),
+        { headers },
+      );
+      expect(userResponse.status()).toBe(200);
+      expect((await userResponse.json()).books).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            isbn: postedBook.isbn,
+            title: postedBook.title,
+            subTitle: postedBook.subTitle,
+            author: postedBook.author,
+            publisher: postedBook.publisher,
+            pages: postedBook.pages,
+          }),
+        ]),
+      );
+
+      const removeBookResponse = await request.delete(getUrl('/BookStore/v1/Book'), {
+        headers,
+        data: { isbn: postedBook.isbn, userId: account.userId },
+      });
+      expect(removeBookResponse.status()).toBe(204);
+    } finally {
+      await deleteAccount(request, account, token);
+    }
   });
 
   test('returns bad request for an invalid ISBN', async ({ request }) => {
