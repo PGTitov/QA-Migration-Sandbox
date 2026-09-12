@@ -34,7 +34,19 @@ test.describe('DemoQA Book Store API', () => {
     );
 
     expect(bookResponse.status()).toBe(200);
-    expect((await bookResponse.json()).isbn).toBe(isbn);
+    expect(await bookResponse.json()).toEqual(
+      expect.objectContaining({
+        isbn,
+        title: expect.any(String),
+        subTitle: expect.any(String),
+        author: expect.any(String),
+        publish_date: expect.any(String),
+        publisher: expect.any(String),
+        pages: expect.any(Number),
+        description: expect.any(String),
+        website: expect.any(String),
+      }),
+    );
   });
 
   test('rejects an unknown ISBN', async ({ request }) => {
@@ -42,6 +54,10 @@ test.describe('DemoQA Book Store API', () => {
       getUrl('/BookStore/v1/Book?ISBN=invalid-isbn'),
     );
     expect(invalidResponse.status()).toBe(400);
+    expect(await invalidResponse.json()).toEqual({
+      code: '1205',
+      message: 'ISBN supplied is not available in Books Collection!',
+    });
   });
 
   test('creates an account and validates its credentials', async ({ request }) => {
