@@ -37,6 +37,11 @@ export class CheckBoxPage {
     await this.locators.collapseAllButton.click();
   }
 
+  @step('Expand checkbox item "{{args[0]}}"')
+  async expandItem(itemLabel: string): Promise<void> {
+    await this.getTreeItem(itemLabel).locator('.rc-tree-switcher').click();
+  }
+
   @step('Check item "{{args[0]}}"')
   async checkItem(itemLabel: string): Promise<void> {
     await this.getItemCheckbox(itemLabel).check();
@@ -56,10 +61,14 @@ export class CheckBoxPage {
   }
 
   private getItemCheckbox(itemLabel: string): CheckBox {
-    const itemCheckbox = this.page
-      .getByRole('treeitem', { name: new RegExp(itemLabel, 'i') })
-      .getByRole('checkbox');
+    const itemCheckbox = this.getTreeItem(itemLabel).getByRole('checkbox');
     return new CheckBox(itemCheckbox, itemLabel);
+  }
+
+  private getTreeItem(itemLabel: string): Locator {
+    return this.page.getByRole('treeitem', {
+      name: new RegExp(itemLabel, 'i'),
+    });
   }
 
   toString(): string {
