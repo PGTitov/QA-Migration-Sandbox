@@ -30,6 +30,7 @@ export class PracticeFormPage {
     cityInput: Locator;
     submitButton: Locator;
     successMessage: Locator;
+    successDialog: Locator;
   };
 
   private firstName?: TextBox;
@@ -58,6 +59,7 @@ export class PracticeFormPage {
       cityInput: this.page.locator('#react-select-4-input'),
       submitButton: this.page.locator('button:text("Submit")'),
       successMessage: this.page.locator('.modal-body'),
+      successDialog: this.page.getByRole('dialog'),
     };
     this.verify = new PracticeFormPageVerify(this);
   }
@@ -95,14 +97,19 @@ export class PracticeFormPage {
 
   @step('Select gender "{{args[0]}}"')
   async selectGender(gender: string): Promise<void> {
-    if (gender.toLowerCase() === 'male') {
-      await this.maleButton.select();
-    } else if (gender.toLowerCase() === 'female') {
-      await this.femaleButton.select();
-    } else {
-      const otherBtn = new RadioButton(this.locators.otherRadio, 'Other');
-      await otherBtn.select();
-    }
+    const normalizedGender = gender.toLowerCase();
+    const genderLabel =
+      normalizedGender === 'male'
+        ? 'Male'
+        : normalizedGender === 'female'
+          ? 'Female'
+          : 'Other';
+    await this.page.getByText(genderLabel, { exact: true }).click();
+  }
+
+  @step('Enter email "{{args[0]}}"')
+  async enterEmail(email: string): Promise<void> {
+    await this.locators.emailInput.fill(email);
   }
 
   @step('Enter mobile number "{{args[0]}}"')

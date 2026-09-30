@@ -18,6 +18,19 @@ export class PracticeFormPageVerify {
     await expect(this.page.locators.successMessage).toContainText(text);
   }
 
+  @step('Verify email field has a pattern mismatch')
+  async emailPatternMismatchIsPresent(): Promise<void> {
+    const emailHasPatternMismatch = await this.page.locators.emailInput.evaluate(
+      (input: HTMLInputElement) => input.validity.patternMismatch
+    );
+    expect(emailHasPatternMismatch).toBe(true);
+  }
+
+  @step('Verify success dialog is hidden')
+  async successDialogIsHidden(): Promise<void> {
+    await expect(this.page.locators.successDialog).toBeHidden();
+  }
+
   toString(): string {
     return 'Practice Form Page';
   }
