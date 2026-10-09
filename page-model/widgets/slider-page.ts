@@ -17,8 +17,8 @@ export class SliderPage {
   constructor(protected readonly page: Page) {
     this.locators = {
       root: this.page.locator('app-slider'),
-      slider: this.page.locator('.rc-slider'),
-      sliderInput: this.page.locator('#sliderID'),
+      slider: this.page.getByRole('slider'),
+      sliderInput: this.page.getByRole('slider'),
       sliderValue: this.page.locator('.mt-4'),
     };
     this.verify = new SliderPageVerify(this);
@@ -26,7 +26,11 @@ export class SliderPage {
 
   @step('Set slider value to "{{args[0]}}"')
   async setSliderValue(value: string): Promise<void> {
-    await this.locators.sliderInput.fill(value);
+    const targetValue = Number(value);
+    await this.locators.sliderInput.press('Home');
+    for (let currentValue = 0; currentValue < targetValue; currentValue += 1) {
+      await this.locators.sliderInput.press('ArrowRight');
+    }
   }
 
   @step('Get slider value')
