@@ -182,4 +182,36 @@ test.describe('DemoQA end-to-end journeys', () => {
       });
     }
   );
+
+  test(
+    '[E2E-05] Reject a student registration form without a mobile number',
+    {
+      annotation: [
+        { type: 'author', description: Authors.Pavlo },
+        { type: 'id', description: 'E2E-05' },
+        { type: 'priority', description: Priorities.Medium },
+      ],
+    },
+    async ({ demoQA, page }) => {
+      const formData = createPracticeFormData({ mobile: '' });
+
+      await test.step('Open the registration form and leave the required mobile number empty', async () => {
+        await page.goto(getUrl(testConfig.pages.forms), {
+          waitUntil: 'domcontentloaded',
+        });
+        await demoQA.practiceFormPage.fillBasicInfo(
+          formData.firstName,
+          formData.lastName
+        );
+        await demoQA.practiceFormPage.enterEmail(formData.email);
+        await demoQA.practiceFormPage.selectGender('female');
+      });
+
+      await test.step('Submit and verify browser validation blocks the result', async () => {
+        await demoQA.practiceFormPage.submit();
+        await demoQA.practiceFormPage.verify.mobileIsRequired();
+        await demoQA.practiceFormPage.verify.successDialogIsHidden();
+      });
+    }
+  );
 });
