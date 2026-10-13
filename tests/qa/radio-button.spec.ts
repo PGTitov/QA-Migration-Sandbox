@@ -2,6 +2,12 @@ import { test, Authors, Priorities } from '../fixtures';
 import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Radio Button page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(getUrl(testConfig.pages.radioButton), {
+      waitUntil: 'domcontentloaded',
+    });
+  });
+
   test(
     '[TEST-12] Verify selecting Yes displays the correct result',
     {
@@ -11,23 +17,15 @@ test.describe('DemoQA Radio Button page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Radio Button page', async () => {
-        await page.goto(getUrl(testConfig.pages.radioButton), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Select the Yes radio button', async () => {
+      await test.step('1. Select the Yes radio button', async () => {
         await demoQA.radioButtonPage.selectOption('Yes');
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the result shows Yes', async () => {
+      await test.step('2. Verify the result shows Yes', async () => {
         await demoQA.radioButtonPage.verify.resultShows('Yes');
       });
       // #endregion
@@ -43,23 +41,15 @@ test.describe('DemoQA Radio Button page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Radio Button page', async () => {
-        await page.goto(getUrl(testConfig.pages.radioButton), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Select the Impressive radio button', async () => {
+      await test.step('1. Select the Impressive radio button', async () => {
         await demoQA.radioButtonPage.selectOption('Impressive');
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the result shows Impressive', async () => {
+      await test.step('2. Verify the result shows Impressive', async () => {
         await demoQA.radioButtonPage.verify.resultShows('Impressive');
       });
       // #endregion
@@ -75,12 +65,9 @@ test.describe('DemoQA Radio Button page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Radio Button page and select Yes', async () => {
-        await page.goto(getUrl(testConfig.pages.radioButton), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Select Yes and verify its result', async () => {
         await demoQA.radioButtonPage.selectOption('Yes');
         await demoQA.radioButtonPage.verify.resultShows('Yes');
       });
@@ -109,17 +96,9 @@ test.describe('DemoQA Radio Button page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Radio Button page', async () => {
-        await page.goto(getUrl(testConfig.pages.radioButton), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify the No radio button is disabled', async () => {
+      await test.step('1. Verify the No radio button is disabled', async () => {
         await demoQA.radioButtonPage.verify.optionIsDisabled('No');
       });
       // #endregion

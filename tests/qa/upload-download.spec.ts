@@ -5,6 +5,12 @@ import { getUrl, testConfig } from '../../config';
 const sampleFilePath = path.join(__dirname, '..', '..', 'data', 'files', 'sample-upload.txt');
 
 test.describe('DemoQA Upload and Download page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(getUrl(testConfig.pages.uploadDownload), {
+      waitUntil: 'domcontentloaded',
+    });
+  });
+
   test(
     '[TEST-50] Verify uploading a file displays its name',
     {
@@ -14,23 +20,15 @@ test.describe('DemoQA Upload and Download page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Upload and Download page', async () => {
-        await page.goto(getUrl(testConfig.pages.uploadDownload), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Upload the sample file', async () => {
+      await test.step('1. Upload the sample file', async () => {
         await demoQA.uploadDownloadPage.uploadFile(sampleFilePath);
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the uploaded file name is displayed', async () => {
+      await test.step('2. Verify the uploaded file name is displayed', async () => {
         await demoQA.uploadDownloadPage.verify.uploadedFileNameIs('sample-upload.txt');
       });
       // #endregion
@@ -46,24 +44,16 @@ test.describe('DemoQA Upload and Download page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Upload and Download page', async () => {
-        await page.goto(getUrl(testConfig.pages.uploadDownload), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
       let download: Awaited<ReturnType<typeof demoQA.uploadDownloadPage.download>>;
-      await test.step('2. Click the Download button', async () => {
+      await test.step('1. Click the Download button', async () => {
         download = await demoQA.uploadDownloadPage.download();
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the downloaded file name is sampleFile.jpeg', async () => {
+      await test.step('2. Verify the downloaded file name is sampleFile.jpeg', async () => {
         demoQA.uploadDownloadPage.verify.downloadedFileNameIs(download, 'sampleFile.jpeg');
       });
       // #endregion
@@ -79,12 +69,8 @@ test.describe('DemoQA Upload and Download page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Upload and Download page and upload a file', async () => {
-        await page.goto(getUrl(testConfig.pages.uploadDownload), {
-          waitUntil: 'domcontentloaded',
-        });
+    async ({ demoQA }) => {
+      await test.step('1. Upload a file to replace', async () => {
         await demoQA.uploadDownloadPage.uploadFile(sampleFilePath);
         await demoQA.uploadDownloadPage.verify.uploadedFileNameIs('sample-upload.txt');
       });
