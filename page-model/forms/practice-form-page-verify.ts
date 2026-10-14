@@ -26,6 +26,14 @@ export class PracticeFormPageVerify {
     expect(emailHasPatternMismatch).toBe(true);
   }
 
+  @step('Verify mobile number is required')
+  async mobileIsRequired(): Promise<void> {
+    const mobileIsMissing = await this.page.locators.mobileInput.evaluate(
+      (input: HTMLInputElement) => input.validity.valueMissing
+    );
+    expect(mobileIsMissing).toBe(true);
+  }
+
   @step('Verify success dialog is hidden')
   async successDialogIsHidden(): Promise<void> {
     await expect(this.page.locators.successDialog).toBeHidden();

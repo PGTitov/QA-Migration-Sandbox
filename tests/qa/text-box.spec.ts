@@ -3,6 +3,13 @@ import { faker } from '@faker-js/faker';
 import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Text Box page', () => {
+  test.beforeEach(async ({ demoQA, page }) => {
+    await page.goto(getUrl(testConfig.pages.textBox), {
+      waitUntil: 'domcontentloaded',
+    });
+    await demoQA.textBoxPage.waitForForm();
+  });
+
   test(
     '[TEST-1] Verify the Textbox',
     {
@@ -12,36 +19,29 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const fullName = faker.person.fullName();
       const email = faker.internet.email();
       const currentAddress = faker.location.streetAddress();
       const permanentAddress = faker.location.streetAddress();
-
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
       // #endregion
 
       // #region Act
-      await test.step('2. Fill in the Full Name, Email, Current Address, and Permanent Address fields', async () => {
+      await test.step('1. Fill in the Full Name, Email, Current Address, and Permanent Address fields', async () => {
         await demoQA.textBoxPage.fullNameField.typeText(fullName);
         await demoQA.textBoxPage.emailField.typeText(email);
         await demoQA.textBoxPage.currentAddressField.typeText(currentAddress);
         await demoQA.textBoxPage.permanentAddressField.typeText(permanentAddress);
       });
 
-      await test.step('3. Submit the form', async () => {
+      await test.step('2. Submit the form', async () => {
         await demoQA.textBoxPage.submit();
       });
       // #endregion
 
       // #region Assert
-      await test.step('4. Verify that the output contains the entered values', async () => {
+      await test.step('3. Verify that the output contains the entered values', async () => {
         await demoQA.textBoxPage.verify.outputIsVisible();
         await demoQA.textBoxPage.verify.outputContainsName(fullName);
         await demoQA.textBoxPage.verify.outputContainsEmail(email);
@@ -63,24 +63,15 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Submit the empty form', async () => {
+      await test.step('1. Submit the empty form', async () => {
         await demoQA.textBoxPage.submit();
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the fields remain empty and no output is shown', async () => {
+      await test.step('2. Verify the fields remain empty and no output is shown', async () => {
         await demoQA.textBoxPage.fullNameField.verify.hasValue('');
         await demoQA.textBoxPage.emailField.verify.hasValue('');
         await demoQA.textBoxPage.verify.output.visible(false);
@@ -98,20 +89,13 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const fullName = faker.person.fullName();
-
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
       // #endregion
 
       // #region Act
-      await test.step('2. Enter a name and an invalid email address, then submit', async () => {
+      await test.step('1. Enter a name and an invalid email address, then submit', async () => {
         await demoQA.textBoxPage.fullNameField.typeText(fullName);
         await demoQA.textBoxPage.emailField.typeText('invalid-email');
         await demoQA.textBoxPage.submit();
@@ -119,7 +103,7 @@ test.describe('DemoQA Text Box page', () => {
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the email field is invalid and no output is shown', async () => {
+      await test.step('2. Verify the email field is invalid and no output is shown', async () => {
         await demoQA.textBoxPage.verify.emailIsInvalid();
         await demoQA.textBoxPage.verify.emailHasErrorBorder();
         await demoQA.textBoxPage.verify.emailValidationMessageIs();
@@ -138,28 +122,21 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const fullName = faker.person.fullName();
       const email = faker.internet.email();
-
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
       // #endregion
 
       // #region Act
-      await test.step('2. Fill only the required fields and submit the form', async () => {
+      await test.step('1. Fill only the required fields and submit the form', async () => {
         await demoQA.textBoxPage.fillForm(fullName, email);
         await demoQA.textBoxPage.submit();
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the submission contains the required values', async () => {
+      await test.step('2. Verify the submission contains the required values', async () => {
         await demoQA.textBoxPage.verify.outputIsVisible();
         await demoQA.textBoxPage.verify.outputContainsName(fullName);
         await demoQA.textBoxPage.verify.outputContainsEmail(email);
@@ -177,23 +154,16 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const fullName = "O'Connor & Sons";
       const email = 'qa.text.box@example.co.uk';
       const currentAddress = '123/45-A #7';
       const permanentAddress = '"Quoted" Street';
-
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
       // #endregion
 
       // #region Act
-      await test.step('2. Fill and submit the form with special characters', async () => {
+      await test.step('1. Fill and submit the form with special characters', async () => {
         await demoQA.textBoxPage.fillForm(
           fullName,
           email,
@@ -205,7 +175,7 @@ test.describe('DemoQA Text Box page', () => {
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify special characters are preserved in the output', async () => {
+      await test.step('2. Verify special characters are preserved in the output', async () => {
         await demoQA.textBoxPage.verify.output.visible();
         await demoQA.textBoxPage.verify.outputContainsName(fullName);
         await demoQA.textBoxPage.verify.outputContainsEmail(email);
@@ -225,23 +195,16 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const fullName = 'Тест Жанна';
       const email = 'qa.unicode@example.com';
       const currentAddress = 'вул. Тестова, д. 42\nКвартира 7';
       const permanentAddress = '東京\n〒100-0001';
-
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
       // #endregion
 
       // #region Act
-      await test.step('2. Fill and submit the form with Unicode and multiline values', async () => {
+      await test.step('1. Fill and submit the form with Unicode and multiline values', async () => {
         await demoQA.textBoxPage.fillForm(
           fullName,
           email,
@@ -253,7 +216,7 @@ test.describe('DemoQA Text Box page', () => {
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify Unicode and multiline values are preserved in the output', async () => {
+      await test.step('2. Verify Unicode and multiline values are preserved in the output', async () => {
         await demoQA.textBoxPage.verify.output.visible();
         await demoQA.textBoxPage.verify.outputContainsName(fullName);
         await demoQA.textBoxPage.verify.outputContainsEmail(email);
@@ -273,18 +236,9 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify both address fields can be resized vertically', async () => {
+      await test.step('1. Verify both address fields can be resized vertically', async () => {
         await demoQA.textBoxPage.verify.addressFieldCanBeResizedVertically(
           'currentAddress'
         );
@@ -305,18 +259,9 @@ test.describe('DemoQA Text Box page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Text Box page', async () => {
-        await page.goto(getUrl(testConfig.pages.textBox), {
-          waitUntil: 'domcontentloaded',
-        });
-        await demoQA.textBoxPage.waitForForm();
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Focus Current Address and press Tab', async () => {
+      await test.step('1. Focus Current Address and press Tab', async () => {
         await demoQA.textBoxPage.currentAddressField.click();
         await demoQA.textBoxPage.verify.addressFieldIsFocused('currentAddress');
         await demoQA.textBoxPage.verify.addressFieldHasBlueFocusBorder(
@@ -327,7 +272,7 @@ test.describe('DemoQA Text Box page', () => {
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify focus moves to Permanent Address with the blue focus border', async () => {
+      await test.step('2. Verify focus moves to Permanent Address with the blue focus border', async () => {
         await demoQA.textBoxPage.verify.addressFieldIsFocused('permanentAddress');
         await demoQA.textBoxPage.verify.addressFieldHasBlueFocusBorder(
           'permanentAddress'

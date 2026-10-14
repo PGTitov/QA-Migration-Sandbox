@@ -4,6 +4,12 @@ import { getUrl, testConfig } from '../../config';
 import { WebTableRecord } from '../../page-model/elements';
 
 test.describe('DemoQA Web Tables page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(getUrl(testConfig.pages.webTables), {
+      waitUntil: 'domcontentloaded',
+    });
+  });
+
   test(
     '[TEST-16] Verify adding a new record displays it in the table',
     {
@@ -13,7 +19,7 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const record: WebTableRecord = {
         firstName: faker.person.firstName(),
@@ -24,21 +30,14 @@ test.describe('DemoQA Web Tables page', () => {
         department: 'QA',
       };
 
-      await test.step('1. Navigate to the Web Tables page', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
       // #region Act
-      await test.step('2. Add a new record', async () => {
+      await test.step('1. Add a new record', async () => {
         await demoQA.webTablesPage.addRecord(record);
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify the new record is displayed in the table', async () => {
+      await test.step('2. Verify the new record is displayed in the table', async () => {
         await demoQA.webTablesPage.verify.rowIsVisible(record.email);
         await demoQA.webTablesPage.verify.rowContains(
           record.email,
@@ -62,12 +61,9 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -95,12 +91,9 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -133,7 +126,7 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const originalRecord: WebTableRecord = {
         firstName: faker.person.firstName(),
@@ -152,10 +145,7 @@ test.describe('DemoQA Web Tables page', () => {
         department: 'Support',
       };
 
-      await test.step('1. Navigate to the Web Tables page and add a record', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Add a record', async () => {
         await demoQA.webTablesPage.addRecord(originalRecord);
         await demoQA.webTablesPage.verify.rowIsVisible(originalRecord.email);
       });
@@ -195,7 +185,7 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const record: WebTableRecord = {
         firstName: faker.person.firstName(),
@@ -206,10 +196,7 @@ test.describe('DemoQA Web Tables page', () => {
         department: 'QA',
       };
 
-      await test.step('1. Navigate to the Web Tables page and add a record', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Add a record', async () => {
         await demoQA.webTablesPage.addRecord(record);
         await demoQA.webTablesPage.verify.rowIsVisible(record.email);
       });
@@ -238,7 +225,7 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const record: WebTableRecord = {
         firstName: faker.person.firstName(),
@@ -249,10 +236,7 @@ test.describe('DemoQA Web Tables page', () => {
         department: 'QA',
       };
 
-      await test.step('1. Navigate to the Web Tables page and add a record', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Add a record', async () => {
         await demoQA.webTablesPage.addRecord(record);
         await demoQA.webTablesPage.verify.rowIsVisible(record.email);
       });
@@ -282,23 +266,15 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Web Tables page', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Act
-      await test.step('2. Search for an email that does not exist', async () => {
+      await test.step('1. Search for an email that does not exist', async () => {
         await demoQA.webTablesPage.search('no-such-record@example.com');
       });
       // #endregion
 
       // #region Assert
-      await test.step('3. Verify no rows are displayed', async () => {
+      await test.step('2. Verify no rows are displayed', async () => {
         await demoQA.webTablesPage.verify.rowCountIs(0);
       });
       // #endregion
@@ -314,14 +290,11 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const email = faker.internet.email();
 
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -359,14 +332,11 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const email = faker.internet.email();
 
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -404,12 +374,9 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -447,14 +414,11 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const email = faker.internet.email();
 
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -495,14 +459,11 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const email = faker.internet.email();
 
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -543,12 +504,9 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -576,14 +534,11 @@ test.describe('DemoQA Web Tables page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
       const email = faker.internet.email();
 
-      await test.step('1. Navigate to the Web Tables page and open the Add form', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Open the Add form', async () => {
         await demoQA.webTablesPage.openAddNewRecordForm();
       });
       // #endregion
@@ -608,4 +563,3 @@ test.describe('DemoQA Web Tables page', () => {
     }
   );
 });
-

@@ -3,6 +3,12 @@ import { APIResponse } from '@playwright/test';
 import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Broken Links - Images page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
+      waitUntil: 'domcontentloaded',
+    });
+  });
+
   test(
     '[TEST-45] Verify the valid image loads successfully',
     {
@@ -12,20 +18,12 @@ test.describe('DemoQA Broken Links - Images page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // Known demoqa.com defect: the "valid" image currently fails to render too.
       test.fail(true, 'demoqa.com serves the "valid" image broken as well');
 
-      // #region Arrange
-      await test.step('1. Navigate to the Broken Links - Images page', async () => {
-        await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
       // #region Assert
-      await test.step('2. Verify the valid image renders correctly', async () => {
+      await test.step('1. Verify the valid image renders correctly', async () => {
         await demoQA.brokenLinksImagesPage.verify.validImageLoadsSuccessfully();
       });
       // #endregion
@@ -41,17 +39,9 @@ test.describe('DemoQA Broken Links - Images page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Broken Links - Images page', async () => {
-        await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify the broken image does not render', async () => {
+      await test.step('1. Verify the broken image does not render', async () => {
         await demoQA.brokenLinksImagesPage.verify.brokenImageFailsToLoad();
       });
       // #endregion
@@ -67,17 +57,9 @@ test.describe('DemoQA Broken Links - Images page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Broken Links - Images page', async () => {
-        await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify the valid link href', async () => {
+      await test.step('1. Verify the valid link href', async () => {
         await demoQA.brokenLinksImagesPage.verify.validLinkHrefIs(
           'http://demoqa.com'
         );
@@ -95,17 +77,9 @@ test.describe('DemoQA Broken Links - Images page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Broken Links - Images page', async () => {
-        await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify the broken link href', async () => {
+      await test.step('1. Verify the broken link href', async () => {
         await demoQA.brokenLinksImagesPage.verify.brokenLinkHrefIs(
           'http://the-internet.herokuapp.com/status_codes/500'
         );
@@ -123,14 +97,11 @@ test.describe('DemoQA Broken Links - Images page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page, request }) => {
+    async ({ demoQA, request }) => {
       // #region Arrange
       let brokenLinkHref = '';
 
-      await test.step('1. Navigate to the Broken Links - Images page', async () => {
-        await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Retrieve the broken link URL', async () => {
         brokenLinkHref =
           (await demoQA.brokenLinksImagesPage.locators.brokenLink.getAttribute(
             'href'

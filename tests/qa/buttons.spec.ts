@@ -2,6 +2,12 @@ import { test, Authors, Priorities } from '../fixtures';
 import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Buttons page', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(getUrl(testConfig.pages.buttons), {
+      waitUntil: 'domcontentloaded',
+    });
+  });
+
   test(
     '[TEST-30] Verify a double click shows the double click message',
     {
@@ -11,12 +17,9 @@ test.describe('DemoQA Buttons page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Buttons page', async () => {
-        await page.goto(getUrl(testConfig.pages.buttons), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Verify no message is shown before clicking', async () => {
         await demoQA.buttonsPage.verify.noMessageShown();
       });
       // #endregion
@@ -45,12 +48,9 @@ test.describe('DemoQA Buttons page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Buttons page', async () => {
-        await page.goto(getUrl(testConfig.pages.buttons), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Verify no message is shown before clicking', async () => {
         await demoQA.buttonsPage.verify.noMessageShown();
       });
       // #endregion
@@ -79,12 +79,9 @@ test.describe('DemoQA Buttons page', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Buttons page', async () => {
-        await page.goto(getUrl(testConfig.pages.buttons), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Verify no message is shown before clicking', async () => {
         await demoQA.buttonsPage.verify.noMessageShown();
       });
       // #endregion
@@ -113,17 +110,9 @@ test.describe('DemoQA Buttons page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
-      // #region Arrange
-      await test.step('1. Navigate to the Buttons page', async () => {
-        await page.goto(getUrl(testConfig.pages.buttons), {
-          waitUntil: 'domcontentloaded',
-        });
-      });
-      // #endregion
-
+    async ({ demoQA }) => {
       // #region Assert
-      await test.step('2. Verify no action message is displayed', async () => {
+      await test.step('1. Verify no action message is displayed', async () => {
         await demoQA.buttonsPage.verify.noMessageShown();
       });
       // #endregion
@@ -139,12 +128,9 @@ test.describe('DemoQA Buttons page', () => {
         { type: 'priority', description: Priorities.Low },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       // #region Arrange
-      await test.step('1. Navigate to the Buttons page', async () => {
-        await page.goto(getUrl(testConfig.pages.buttons), {
-          waitUntil: 'domcontentloaded',
-        });
+      await test.step('1. Verify no message is shown before clicking', async () => {
         await demoQA.buttonsPage.verify.noMessageShown();
       });
       // #endregion
