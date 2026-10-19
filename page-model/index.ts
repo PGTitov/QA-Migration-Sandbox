@@ -22,6 +22,10 @@ export * from './widgets/index';
 // Forms Pages
 export * from './forms/index';
 
+// Alerts and dialogs
+export * from './alerts/index';
+export * from './dialogs/index';
+
 // Interactions (to be implemented)
 export * from './interactions/index';
 
