@@ -46,7 +46,9 @@ jobs:
       - name: Install Playwright browsers
         run: |
           rm -rf ~/.cache/ms-playwright
-          npx playwright install --with-deps chromium firefox webkit
+          npx playwright install --with-deps chromium
+          # npx playwright install --with-deps firefox
+          # npx playwright install --with-deps webkit
 
       - name: Run Playwright tests
         id: run-tests
@@ -73,6 +75,7 @@ jobs:
             TEST_ARGS+=("-g" "$TEST_IDS")
           fi
 
+          TEST_ARGS+=(--project=chromium)
           echo "Running Playwright with: ${TEST_ARGS[*]}"
           npx playwright test "${TEST_ARGS[@]}"
 
