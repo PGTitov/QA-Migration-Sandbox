@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { step } from '../../utils/decorators';
 import { AlertsPageVerify } from './alerts-page-verify';
 
@@ -17,6 +18,13 @@ export class AlertsPage {
       confirmResult: page.locator('#confirmResult'),
     };
     this.verify = new AlertsPageVerify(this);
+  }
+
+  @step('Open the Alerts page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.alerts.alerts), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Trigger the confirmation dialog')

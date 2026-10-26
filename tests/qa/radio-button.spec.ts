@@ -1,11 +1,8 @@
 import { test, Authors, Priorities } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Radio Button page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.radioButton), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.radioButtonPage.open();
   });
 
   test(

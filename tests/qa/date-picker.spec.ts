@@ -1,11 +1,8 @@
 import { test } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Date Picker page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.widgets.datePicker), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.datePickerPage.open();
   });
 
   test('selecting a day updates the date field', async ({ demoQA }) => {

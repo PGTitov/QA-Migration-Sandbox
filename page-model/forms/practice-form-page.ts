@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { TextBox } from '../controls/text-box';
 import { RadioButton } from '../controls/radio-button';
 import { CheckBox } from '../controls/check-box';
@@ -62,6 +63,13 @@ export class PracticeFormPage {
       successDialog: this.page.getByRole('dialog'),
     };
     this.verify = new PracticeFormPageVerify(this);
+  }
+
+  @step('Open the Practice Form page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.forms), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   get firstNameField(): TextBox {

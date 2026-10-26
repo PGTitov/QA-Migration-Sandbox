@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { RadioButton } from '../controls/radio-button';
 import { RadioButtonPageVerify } from './radio-button-page-verify';
 import { step } from '../../utils/decorators';
@@ -21,6 +22,13 @@ export class RadioButtonPage {
       resultText: this.page.locator('.mt-3'),
     };
     this.verify = new RadioButtonPageVerify(this);
+  }
+
+  @step('Open the Radio Button page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.radioButton), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Get radio button "{{args[0]}}"')

@@ -1,12 +1,9 @@
 import { test, Authors, Priorities } from '../fixtures';
 import { Page } from '@playwright/test';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Links page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.links), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.linksPage.open();
   });
 
   test(

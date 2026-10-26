@@ -1,11 +1,8 @@
 import { test } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Check Box page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.checkbox), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.checkBoxPage.open();
   });
 
   test(

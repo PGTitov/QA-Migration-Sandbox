@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { TextBox } from '../controls/text-box';
 import { WebTablesPageVerify } from './web-tables-page-verify';
 import { step } from '../../utils/decorators';
@@ -65,6 +66,13 @@ export class WebTablesPage {
       closeButton: this.page.locator('.modal-header .btn-close'),
     };
     this.verify = new WebTablesPageVerify(this);
+  }
+
+  @step('Open the Web Tables page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.webTables), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   get firstNameField(): TextBox {

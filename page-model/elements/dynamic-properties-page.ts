@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { DynamicPropertiesPageVerify } from './dynamic-properties-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -24,6 +25,13 @@ export class DynamicPropertiesPage {
       visibleAfterButton: this.page.locator('#visibleAfter'),
     };
     this.verify = new DynamicPropertiesPageVerify(this);
+  }
+
+  @step('Open the Dynamic Properties page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.dynamicProperties), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Get the random Id text element id attribute')

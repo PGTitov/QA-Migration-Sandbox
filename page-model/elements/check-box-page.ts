@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { CheckBox } from '../controls/check-box';
 import { CheckBoxPageVerify } from './check-box-page-verify';
 import { step } from '../../utils/decorators';
@@ -25,6 +26,13 @@ export class CheckBoxPage {
       resultsSection: this.page.locator('#result'),
     };
     this.verify = new CheckBoxPageVerify(this);
+  }
+
+  @step('Open the Check Box page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.checkbox), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Expand all checkbox items')

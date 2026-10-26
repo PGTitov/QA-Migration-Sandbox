@@ -1,14 +1,11 @@
 import { test } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Alerts page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.alerts.alerts), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.alertsPage.open();
   });
 
-  test('accepting a confirmation dialog displays the accepted result', async ({ demoQA, page }) => {
+  test('accepting a confirmation dialog displays the accepted result', async ({ demoQA }) => {
     await test.step('1. Trigger the confirmation dialog and accept it', async () => {
       const dialogHandled = demoQA.dialog.acceptNext({
         type: 'confirm',

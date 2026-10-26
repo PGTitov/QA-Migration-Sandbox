@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { Button } from '../controls/button';
 import { ButtonsPageVerify } from './buttons-page-verify';
 import { step } from '../../utils/decorators';
@@ -31,6 +32,13 @@ export class ButtonsPage {
       ),
     };
     this.verify = new ButtonsPageVerify(this);
+  }
+
+  @step('Open the Buttons page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.buttons), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   get doubleClickBtn(): Button {
