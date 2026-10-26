@@ -1,47 +1,43 @@
 import { APIRequestContext, expect } from '@playwright/test';
-import { getUrl } from '../../config';
+import { AccountCredentials } from './models';
+import { isCreateUserResponse, isTokenResponse } from './schemas';
+import { createAccountCredentials } from './test-data';
+import { createApiServices } from './services';
 
-const password = 'Test@12345';
-
-export type Account = {
+export interface Account extends AccountCredentials {
   userId: string;
-  userName: string;
-  password: string;
-};
-
-export function generateRandomUsername(): string {
-  return `api-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export async function registerAccount(request: APIRequestContext): Promise<Account> {
-  const account = {
-    userName: generateRandomUsername(),
-    password,
-  };
-  const response = await request.post(getUrl('/Account/v1/User'), {
-    data: account,
-  });
+  const services = createApiServices(request);
+  const credentials = createAccountCredentials();
+  const response = await services.accounts.create(credentials);
 
   expect(response.status()).toBe(201);
   const body = await response.json();
-  expect(body.username).toBe(account.userName);
-  expect(body.userID).toBeTruthy();
+  expect(isCreateUserResponse(body)).toBe(true);
+  if (!isCreateUserResponse(body)) {
+    throw new Error('Create user response does not match the expected API model');
+  }
+  expect(body.username).toBe(credentials.userName);
 
-  return { userId: body.userID, ...account };
+  return { userId: body.userID, ...credentials };
 }
 
 export async function generateToken(request: APIRequestContext, account: Account): Promise<string> {
-  const response = await request.post(getUrl('/Account/v1/GenerateToken'), {
-    data: {
-      userName: account.userName,
-      password: account.password,
-    },
-  });
+  const services = createApiServices(request);
+  const response = await services.accounts.generateToken(account);
 
   expect(response.status()).toBe(200);
   const body = await response.json();
+  expect(isTokenResponse(body)).toBe(true);
+  if (!isTokenResponse(body)) {
+    throw new Error('Generate token response does not match the expected API model');
+  }
   expect(body.status).toBe('Success');
-  expect(body.token).toBeTruthy();
+  if (!body.token) {
+    throw new Error('Generate token response did not include a token');
+  }
 
   return body.token;
 }
@@ -51,9 +47,8 @@ export async function deleteAccount(
   account: Account,
   token: string,
 ) {
-  const response = await request.delete(getUrl(`/Account/v1/User/${account.userId}`), {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const services = createApiServices(request);
+  const response = await services.users.delete(account.userId, token);
 
   expect([200, 204]).toContain(response.status());
 }
