@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { BrokenLinksImagesPageVerify } from './broken-links-images-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -24,6 +25,13 @@ export class BrokenLinksImagesPage {
       brokenLink: this.page.getByRole('link', { name: 'Click Here for Broken Link' }),
     };
     this.verify = new BrokenLinksImagesPageVerify(this);
+  }
+
+  @step('Open the Broken Links - Images page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.brokenLinksImages), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   toString(): string {

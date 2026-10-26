@@ -1,4 +1,3 @@
-import { getUrl, testConfig } from '../../config';
 import {
   checkboxBranchData,
   createPracticeFormData,
@@ -16,13 +15,11 @@ test.describe('DemoQA end-to-end journeys', () => {
         { type: 'priority', description: Priorities.High },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       const { originalRecord, updatedRecord } = createWebTableLifecycleData();
 
       await test.step('1. Open the web tables page and create a unique record', async () => {
-        await page.goto(getUrl(testConfig.pages.webTables), {
-          waitUntil: 'domcontentloaded',
-        });
+        await demoQA.webTablesPage.open();
         await demoQA.webTablesPage.addRecord(originalRecord);
         await demoQA.webTablesPage.verify.rowIsVisible(originalRecord.email);
       });
@@ -74,11 +71,9 @@ test.describe('DemoQA end-to-end journeys', () => {
         { type: 'priority', description: Priorities.Medium },
       ],
     },
-    async ({ demoQA, page }) => {
+    async ({ demoQA }) => {
       await test.step('1. Open the checkbox tree and expand the path to Office', async () => {
-        await page.goto(getUrl(testConfig.pages.checkbox), {
-          waitUntil: 'domcontentloaded',
-        });
+        await demoQA.checkBoxPage.open();
         await demoQA.checkBoxPage.verify.treeViewIsVisible();
         await demoQA.checkBoxPage.expandItem('Home');
         await demoQA.checkBoxPage.expandItem('Documents');
@@ -108,10 +103,8 @@ test.describe('DemoQA end-to-end journeys', () => {
 });
 
 test.describe('DemoQA student registration form end-to-end journeys', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.forms), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.practiceFormPage.open();
   });
 
   test(

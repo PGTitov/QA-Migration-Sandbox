@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { TextBox } from '../controls/text-box';
 import { TextBoxPageVerify } from './text-box-page-verify';
 import { step } from '../../utils/decorators';
@@ -34,6 +35,13 @@ export class TextBoxPage {
       outputContainer: this.page.locator('#output'),
     };
     this.verify = new TextBoxPageVerify(this);
+  }
+
+  @step('Open the Text Box page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.textBox), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   get fullNameField(): TextBox {

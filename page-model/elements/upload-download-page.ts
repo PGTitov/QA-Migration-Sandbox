@@ -1,4 +1,5 @@
 import { Page, Locator, Download } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { UploadDownloadPageVerify } from './upload-download-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -22,6 +23,13 @@ export class UploadDownloadPage {
       uploadedFilePath: this.page.locator('#uploadedFilePath'),
     };
     this.verify = new UploadDownloadPageVerify(this);
+  }
+
+  @step('Open the Upload and Download page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.uploadDownload), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Download the sample file')

@@ -1,12 +1,9 @@
 import { test, Authors, Priorities } from '../fixtures';
 import { faker } from '@faker-js/faker';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Text Box page', () => {
-  test.beforeEach(async ({ demoQA, page }) => {
-    await page.goto(getUrl(testConfig.pages.textBox), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.textBoxPage.open();
     await demoQA.textBoxPage.waitForForm();
   });
 

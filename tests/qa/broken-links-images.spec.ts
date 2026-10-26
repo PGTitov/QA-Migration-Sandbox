@@ -1,12 +1,9 @@
 import { test, expect, Authors, Priorities } from '../fixtures';
 import { APIResponse } from '@playwright/test';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Broken Links - Images page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.brokenLinksImages), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.brokenLinksImagesPage.open();
   });
 
   test(

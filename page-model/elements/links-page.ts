@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { LinksPageVerify } from './links-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -36,6 +37,13 @@ export class LinksPage {
       responseBox: this.page.locator('#linkResponse'),
     };
     this.verify = new LinksPageVerify(this);
+  }
+
+  @step('Open the Links page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.links), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Click home link')

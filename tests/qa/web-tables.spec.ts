@@ -1,13 +1,10 @@
 import { test, Authors, Priorities } from '../fixtures';
 import { faker } from '@faker-js/faker';
-import { getUrl, testConfig } from '../../config';
 import { WebTableRecord } from '../../page-model/elements';
 
 test.describe('DemoQA Web Tables page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.webTables), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.webTablesPage.open();
   });
 
   test(

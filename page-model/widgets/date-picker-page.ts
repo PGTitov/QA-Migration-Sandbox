@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { DatePickerPageVerify } from './date-picker-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -22,6 +23,13 @@ export class DatePickerPage {
       datePickerContainer: this.page.locator('.react-datepicker'),
     };
     this.verify = new DatePickerPageVerify(this);
+  }
+
+  @step('Open the Date Picker page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.widgets.datePicker), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Click date picker input')

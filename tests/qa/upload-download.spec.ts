@@ -1,14 +1,11 @@
 import path from 'path';
 import { test, Authors, Priorities } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 const sampleFilePath = path.join(__dirname, '..', '..', 'data', 'files', 'sample-upload.txt');
 
 test.describe('DemoQA Upload and Download page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.uploadDownload), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.uploadDownloadPage.open();
   });
 
   test(

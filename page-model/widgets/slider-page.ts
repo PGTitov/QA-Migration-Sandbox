@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import { getUrl, testConfig } from '../../config';
 import { SliderPageVerify } from './slider-page-verify';
 import { step } from '../../utils/decorators';
 
@@ -22,6 +23,13 @@ export class SliderPage {
       sliderValue: this.page.locator('.mt-4'),
     };
     this.verify = new SliderPageVerify(this);
+  }
+
+  @step('Open the Slider page')
+  async open(): Promise<void> {
+    await this.page.goto(getUrl(testConfig.pages.widgets.slider), {
+      waitUntil: 'domcontentloaded',
+    });
   }
 
   @step('Set slider value to "{{args[0]}}"')

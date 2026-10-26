@@ -1,11 +1,8 @@
 import { test } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Slider page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.widgets.slider), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.sliderPage.open();
   });
 
   test('setting a value updates the slider', async ({ demoQA }) => {

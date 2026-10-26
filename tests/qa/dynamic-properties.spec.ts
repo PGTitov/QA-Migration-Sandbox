@@ -1,11 +1,8 @@
 import { test, expect, Authors, Priorities } from '../fixtures';
-import { getUrl, testConfig } from '../../config';
 
 test.describe('DemoQA Dynamic Properties page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(getUrl(testConfig.pages.dynamicProperties), {
-      waitUntil: 'domcontentloaded',
-    });
+  test.beforeEach(async ({ demoQA }) => {
+    await demoQA.dynamicPropertiesPage.open();
   });
 
   test(
