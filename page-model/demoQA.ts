@@ -13,6 +13,15 @@ import { DynamicPropertiesPage } from './elements/dynamic-properties-page';
 import { PracticeFormPage } from './forms/practice-form-page';
 import { DatePickerPage } from './widgets/date-picker-page';
 import { SliderPage } from './widgets/slider-page';
+import { AutoCompletePage } from './widgets/auto-complete-page';
+import { AlertsPage } from './alerts/alerts-page';
+import { DroppablePage } from './interactions/droppable-page';
+import { DialogPage } from './dialogs/dialog-page';
+import {
+  BookStoreBooksPage,
+  BookStoreLoginPage,
+  BookStoreProfilePage,
+} from './book-store';
 
 /**
  * DemoQA - Main facade for all page models
@@ -39,6 +48,17 @@ export class DemoQA {
   // Widgets pages
   private _datePickerPage?: DatePickerPage;
   private _sliderPage?: SliderPage;
+  private _autoCompletePage?: AutoCompletePage;
+
+  // Alerts and interaction pages
+  private _alertsPage?: AlertsPage;
+  private _droppablePage?: DroppablePage;
+  private _dialogPage?: DialogPage;
+
+  // Book Store pages
+  private _bookStoreLoginPage?: BookStoreLoginPage;
+  private _bookStoreBooksPage?: BookStoreBooksPage;
+  private _bookStoreProfilePage?: BookStoreProfilePage;
 
   constructor(
     readonly page: Page,
@@ -111,6 +131,34 @@ export class DemoQA {
 
   get sliderPage(): SliderPage {
     return (this._sliderPage ??= new SliderPage(this.page));
+  }
+
+  get autoCompletePage(): AutoCompletePage {
+    return (this._autoCompletePage ??= new AutoCompletePage(this.page));
+  }
+
+  get alertsPage(): AlertsPage {
+    return (this._alertsPage ??= new AlertsPage(this.page));
+  }
+
+  get droppablePage(): DroppablePage {
+    return (this._droppablePage ??= new DroppablePage(this.page));
+  }
+
+  get dialog(): DialogPage {
+    return (this._dialogPage ??= new DialogPage(this.page));
+  }
+
+  get bookStoreLoginPage(): BookStoreLoginPage {
+    return (this._bookStoreLoginPage ??= new BookStoreLoginPage(this.page));
+  }
+
+  get bookStoreBooksPage(): BookStoreBooksPage {
+    return (this._bookStoreBooksPage ??= new BookStoreBooksPage(this.page));
+  }
+
+  get bookStoreProfilePage(): BookStoreProfilePage {
+    return (this._bookStoreProfilePage ??= new BookStoreProfilePage(this.page));
   }
 
   toString(): string {

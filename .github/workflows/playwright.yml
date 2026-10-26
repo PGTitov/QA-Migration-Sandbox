@@ -13,8 +13,8 @@ on:
         required: false
         default: 'tests/qa'
         type: string
-  schedule:
-    - cron: '0 6 * * *'
+  # schedule:
+    # - cron: '0 6 * * *'
 
 permissions:
   contents: read
