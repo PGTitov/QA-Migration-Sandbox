@@ -1,6 +1,8 @@
 name: Playwright CI
 
 on:
+  push:
+  pull_request:
   workflow_dispatch:
     inputs:
       testIds:
@@ -9,9 +11,9 @@ on:
         default: ''
         type: string
       folders:
-        description: Optional folders to run (comma separated; defaults to tests/qa)
+        description: Optional folders to run (comma separated; defaults to tests/qa,tests/api)
         required: false
-        default: 'tests/qa'
+        default: 'tests/qa,tests/api'
         type: string
   # schedule:
     # - cron: '0 6 * * *'
@@ -44,16 +46,21 @@ jobs:
       - name: Install Playwright browsers
         run: |
           rm -rf ~/.cache/ms-playwright
-          npx playwright install --with-deps chromium firefox webkit
+          npx playwright install --with-deps chromium
+          # npx playwright install --with-deps firefox
+          # npx playwright install --with-deps webkit
 
       - name: Run Playwright tests
         id: run-tests
         shell: bash
+        env:
+          TEST_FOLDERS: ${{ github.event.inputs.folders }}
+          TEST_IDS: ${{ github.event.inputs.testIds }}
         run: |
           TEST_ARGS=()
 
-          if [ -n "${{ github.event.inputs.folders }}" ]; then
-            IFS=',' read -r -a folders <<< "${{ github.event.inputs.folders }}"
+          if [ -n "$TEST_FOLDERS" ]; then
+            IFS=',' read -r -a folders <<< "$TEST_FOLDERS"
             for folder in "${folders[@]}"; do
               trimmed="${folder//[[:space:]]/}"
               if [ -n "$trimmed" ]; then
@@ -61,13 +68,14 @@ jobs:
               fi
             done
           else
-            TEST_ARGS+=("tests/qa")
+            TEST_ARGS+=("tests/qa" "tests/api")
           fi
 
-          if [ -n "${{ github.event.inputs.testIds }}" ]; then
-            TEST_ARGS+=("-g" "${{ github.event.inputs.testIds }}")
+          if [ -n "$TEST_IDS" ]; then
+            TEST_ARGS+=("-g" "$TEST_IDS")
           fi
 
+          TEST_ARGS+=(--project=chromium)
           echo "Running Playwright with: ${TEST_ARGS[*]}"
           npx playwright test "${TEST_ARGS[@]}"
 

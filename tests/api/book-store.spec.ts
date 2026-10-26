@@ -1,18 +1,18 @@
 import { expect, test } from '@playwright/test';
-import { getUrl } from '../../config';
 import {
   deleteAccount,
   generateToken,
   registerAccount,
 } from './general-utils';
 import { testBooks } from '../../test-data/books';
+import { createApiServices } from './services';
 
 const testBook = testBooks[0];
 
 test.describe('DemoQA Book Store API', () => {
   test.describe('GET /BookStore/v1/Books', () => {
     test('should return books with the documented fields', async ({ request }) => {
-      const response = await request.get(getUrl('/BookStore/v1/Books'));
+      const response = await createApiServices(request).books.list();
 
       expect(response.status()).toBe(200);
       expect(response.headers()['content-type']).toContain('application/json');
@@ -33,9 +33,7 @@ test.describe('DemoQA Book Store API', () => {
 
   test.describe('GET /BookStore/v1/Book', () => {
     test('should return a book by ISBN', async ({ request }) => {
-      const bookResponse = await request.get(
-        getUrl(`/BookStore/v1/Book?ISBN=${testBook.isbn}`),
-      );
+      const bookResponse = await createApiServices(request).books.getByIsbn(testBook.isbn);
 
       expect(bookResponse.status()).toBe(200);
       expect(await bookResponse.json()).toEqual(
@@ -54,28 +52,37 @@ test.describe('DemoQA Book Store API', () => {
     });
 
     test('should reject an unknown ISBN with 400', async ({ request }) => {
-      const invalidResponse = await request.get(
-        getUrl('/BookStore/v1/Book?ISBN=invalid-isbn'),
-      );
+      const invalidResponse = await createApiServices(request).books.getByIsbn('invalid-isbn');
       expect(invalidResponse.status()).toBe(400);
       expect(await invalidResponse.json()).toEqual({
         code: '1205',
         message: 'ISBN supplied is not available in Books Collection!',
       });
     });
+
+    test('should fail token generation for invalid credentials', async ({ request }) => {
+      const response = await createApiServices(request).accounts.generateToken({
+          userName: 'non-existent-user',
+          password: 'Wrong@12345',
+      });
+
+      expect(response.status()).toBe(200);
+      expect(await response.json()).toEqual({
+        token: null,
+        expires: null,
+        status: 'Failed',
+        result: 'User authorization failed.',
+      });
+    });
   });
 
   test('POST /Account/v1/User and /Account/v1/GenerateToken should create and authorize an account', async ({ request }) => {
+    const services = createApiServices(request);
     const account = await registerAccount(request);
     const token = await generateToken(request, account);
 
     try {
-      const authorizedResponse = await request.post(getUrl('/Account/v1/Authorized'), {
-        data: {
-          userName: account.userName,
-          password: account.password,
-        },
-      });
+      const authorizedResponse = await services.accounts.authorize(account);
 
       expect(authorizedResponse.status()).toBe(200);
       expect(await authorizedResponse.json()).toBe(true);
@@ -85,32 +92,23 @@ test.describe('DemoQA Book Store API', () => {
   });
 
   test('POST /BookStore/v1/Books should add a book and return its data in the user collection', async ({ request }) => {
+    const services = createApiServices(request);
     const postedBook = testBooks[1];
     const account = await registerAccount(request);
     const token = await generateToken(request, account);
-    const headers = { Authorization: `Bearer ${token}` };
 
     try {
-      const userResponse = await request.get(
-        getUrl(`/Account/v1/User/${account.userId}`),
-        { headers },
-      );
+      const userResponse = await services.users.get(account.userId, token);
       expect(userResponse.status()).toBe(200);
       expect((await userResponse.json()).userId).toBe(account.userId);
 
-      const addBookResponse = await request.post(getUrl('/BookStore/v1/Books'), {
-        headers,
-        data: {
+      const addBookResponse = await services.books.addToCollection({
           userId: account.userId,
           collectionOfIsbns: [{ isbn: postedBook.isbn }],
-        },
-      });
+      }, token);
       expect(addBookResponse.status()).toBe(201);
 
-      const updatedUserResponse = await request.get(
-        getUrl(`/Account/v1/User/${account.userId}`),
-        { headers },
-      );
+      const updatedUserResponse = await services.users.get(account.userId, token);
       expect((await updatedUserResponse.json()).books).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -124,10 +122,10 @@ test.describe('DemoQA Book Store API', () => {
         ]),
       );
 
-      const removeBookResponse = await request.delete(getUrl('/BookStore/v1/Book'), {
-        headers,
-        data: { isbn: postedBook.isbn, userId: account.userId },
-      });
+      const removeBookResponse = await services.books.removeFromCollection(
+        { isbn: postedBook.isbn, userId: account.userId },
+        token,
+      );
       expect(removeBookResponse.status()).toBe(204);
     } finally {
       await deleteAccount(request, account, token);
@@ -135,10 +133,31 @@ test.describe('DemoQA Book Store API', () => {
   });
 
   test('GET /Account/v1/User/{userId} should reject access without a valid token', async ({ request }) => {
-    const response = await request.get(
-      getUrl('/Account/v1/User/00000000-0000-0000-0000-000000000000'),
+    const response = await createApiServices(request).users.get(
+      '00000000-0000-0000-0000-000000000000',
     );
 
     expect(response.status()).toBe(401);
+  });
+
+  test('GET /Account/v1/User/{userId} should reject a non-existent user ID even with a valid token', async ({ request }) => {
+    const services = createApiServices(request);
+    const account = await registerAccount(request);
+    const token = await generateToken(request, account);
+
+    try {
+      const response = await services.users.get(
+        '00000000-0000-0000-0000-000000000000',
+        token,
+      );
+
+      expect(response.status()).toBe(401);
+      expect(await response.json()).toEqual({
+        code: '1207',
+        message: 'User not found!',
+      });
+    } finally {
+      await deleteAccount(request, account, token);
+    }
   });
 });
