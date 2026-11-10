@@ -803,6 +803,66 @@ npm test
 - AI-assisted workflow із перевіркою та ручними змінами;
 - Git-гілка з історією змістовних комітів.
 
+# Короткий гайд: API-автоматизація
+
+Цей трек доповнює веб-автоматизацію практикою API-тестування. Основний цикл:
+
+```text
+підготувати дані -> надіслати запит -> перевірити відповідь -> очистити дані
+```
+
+## Етап 1. HTTP і перший API-тест
+
+Навчитися читати запит і відповідь: URL, path/query parameters, headers, body, HTTP method, status code та JSON. Почати з `GET` і перевіряти не лише статус, а й важливі поля відповіді.
+
+У цьому проєкті API-тести запускаються через Playwright fixture `request` і розміщуються в `tests/api/`.
+
+```ts
+test('book catalog returns data', async ({ request }) => {
+  const response = await createApiServices(request).books.list();
+
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toContain('application/json');
+
+  const body = await response.json();
+  expect(body.books.length).toBeGreaterThan(0);
+  expect(body.books[0]).toEqual(
+    expect.objectContaining({ isbn: expect.any(String) }),
+  );
+});
+```
+
+## Етап 2. Сценарії та перевірки
+
+Автоматизувати основні операції ресурсу: читання, створення, зміну та видалення. Додати негативні сценарії для некоректних даних, відсутньої авторизації та невідомих ресурсів.
+
+Для кожного сценарію перевірити доречні status code, headers і значення в response body. Тестові записи створювати незалежно; після сценарію видаляти створені дані, коли це можливо.
+
+## Етап 3. Структура та Middle-практика
+
+Використовувати наявний поділ відповідальності:
+
+- `tests/api/` - сценарії;
+- `tests/api/services/` - операції над ресурсами;
+- `tests/api/client.ts` - спільний HTTP-клієнт;
+- `tests/api/models.ts` і `tests/api/schemas.ts` - типи та runtime-перевірки відповіді;
+- `tests/api/test-data.ts` - генерація тестових даних.
+
+На Middle-рівні додати data-driven перевірки, перевірки схем і edge cases, усувати дублювання без надмірних абстракцій та аналізувати результати тестів у CI.
+
+## Критерії завершення та докази
+
+Учень може пояснити, що перевіряє кожен assertion, чому обрав позитивний або негативний сценарій, як тест ізольований та як видаляються тестові дані.
+
+Для review підготувати код тестів, результати запуску, приклади позитивної й негативної перевірки та коротке пояснення структури клієнт/сервіс/тест.
+
+Запуск API suite:
+
+```text
+npm run test:api -- --project=chromium
+npm run typecheck
+```
+
 # Опціональні advanced-модулі
 
 Ці теми не є обов'язковими для Middle-рівня:
